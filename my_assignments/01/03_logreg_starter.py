@@ -16,7 +16,7 @@ n_train = 60000
 n_test = 10000
 
 # Step 1: Read in data
-mnist_folder = '../examples/data/mnist'
+mnist_folder = '../../examples/data/mnist'
 utils.download_mnist(mnist_folder)
 train, val, test = utils.read_mnist(mnist_folder, flatten=True)
 
@@ -55,7 +55,7 @@ logits = tf.add(tf.matmul(img, w), b)
 
 # Step 5: define loss function
 # use cross entropy of softmax of logits as the loss function
-entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=label, name='entropy')
+entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=label, name='entropy')
 loss = tf.reduce_mean(entropy, name='loss')
 
 # Step 6: define training op

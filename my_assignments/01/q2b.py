@@ -9,7 +9,7 @@ import time
 from my_practice import utils
 
 # Define parameters for the model
-learning_rate = 0.01
+learning_rate = 0.002
 batch_size = 128
 n_epochs = 30
 n_train = 60000
@@ -44,14 +44,20 @@ test_init = iterator.make_initializer(test_data)
 # shape of w depends on the dimension of X and Y so that Y = tf.matmul(X, w)
 # shape of b depends on Y
 print("img.shape:{0}, label:{1}".format(img.shape, label.shape))
-w = tf.get_variable(name='weights', shape=(img.shape[1], label.shape[1]),
-                    initializer=tf.random_normal_initializer(mean=0, stddev=0.01))
-b = tf.get_variable(name='bias', shape=(1, label.shape[1]), initializer=tf.zeros_initializer())
+l1_hidden = 50
+w1 = tf.get_variable(name='weights1', shape=(img.shape[1], l1_hidden),
+                     initializer=tf.random_normal_initializer(mean=0, stddev=0.01))
+b1 = tf.get_variable(name='bias1', shape=(1, l1_hidden), initializer=tf.zeros_initializer())
+
+w2 = tf.get_variable(name='weights2', shape=(l1_hidden, label.shape[1]),
+                     initializer=tf.random_normal_initializer(mean=0, stddev=0.01))
+b2 = tf.get_variable(name='bias2', shape=(1, label.shape[1]), initializer=tf.zeros_initializer())
 
 # Step 4: build model
 # the model that returns the logits.
 # this logits will be later passed through softmax layer
-logits = tf.add(tf.matmul(img, w), b)
+y1 = tf.nn.relu(tf.add(tf.matmul(img, w1), b1))
+logits = tf.add(tf.matmul(y1, w2), b2)
 
 # Step 5: define loss function
 # use cross entropy of softmax of logits as the loss function
@@ -98,3 +104,8 @@ with tf.Session() as sess:
 
     print('Accuracy {0}'.format(total_corrent_preds))
 writer.close()
+
+# from 03_logreg_starter.py
+# add one more hidden layer with 50 nodes
+# activation function = relu
+# Accuracy 0.9704999782843515
